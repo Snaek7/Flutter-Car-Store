@@ -10,6 +10,7 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RaisedButton(
       color: Colors.blue,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
       child: Text(
         text,
         style: TextStyle(color: Colors.white),

@@ -29,8 +29,13 @@ class AppFormText extends StatelessWidget {
       validator: validator,
       controller: controller,
       decoration: InputDecoration(
-          border: InputBorder.none,
-          labelText: label, hintText: hint, hintStyle: TextStyle(fontSize: 14),),
+        border: InputBorder.none,
+        labelText: label,
+        hintText: hint,
+        hintStyle: TextStyle(
+          fontSize: 14,
+        ),
+      ),
       obscureText: isHidden,
       keyboardType: keyboardType,
       textInputAction: textInputAction,

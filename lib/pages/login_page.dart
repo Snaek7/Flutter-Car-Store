@@ -6,6 +6,7 @@ import 'package:first_app/utils/nav.dart';
 import 'package:first_app/widgets/alert.dart';
 import 'package:first_app/widgets/app_button.dart';
 import 'package:first_app/widgets/app_formText.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -39,64 +40,73 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _body() {
-    return Form(
-      key: _formKey,
-      child: Container(
-        padding: EdgeInsets.all(16),
-        child: ListView(
-          children: <Widget>[
-            Container(
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color.fromRGBO(0, 0, 0, .1),
-                          blurRadius: 20,
-                          offset: Offset(0, 10))
-                    ]),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(color: Colors.grey[200]))),
-                      child: AppFormText(
-                        'Login',
-                        'Digite o login',
-                        controller: _tLogin,
-                        validator: _validateLogin,
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        nextFocus: _focusPassword,
+    return Container(
+      child: Form(
+        key: _formKey,
+        child: Container(
+          padding: EdgeInsets.all(16),
+          child: ListView(
+            children: <Widget>[
+              Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, .1),
+                            blurRadius: 20,
+                            offset: Offset(0, 10))
+                      ]),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[200]))),
+                        child: AppFormText(
+                          'Login',
+                          'Digite o login',
+                          controller: _tLogin,
+                          validator: _validateLogin,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          nextFocus: _focusPassword,
+                        ),
                       ),
-                    ),
-                    Container(
-                      child: AppFormText(
-                        'Senha',
-                        'Digite a senha',
-                        isHidden: true,
-                        controller: _tPassword,
-                        validator: _validatePassword,
-                        keyboardType: TextInputType.number,
-                        focusNode: _focusPassword,
+                      Container(
+                        child: AppFormText(
+                          'Senha',
+                          'Digite a senha',
+                          isHidden: true,
+                          controller: _tPassword,
+                          validator: _validatePassword,
+                          keyboardType: TextInputType.number,
+                          focusNode: _focusPassword,
+                        ),
                       ),
-                    ),
-                  ],
-                )),
-            SizedBox(height: 20),
-            Container(
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, .2),
-                    blurRadius: 20,
-                    offset: Offset(0, 10))
-              ]),
-              height: 46,
-              child: AppButton('Login', onPressed: _onClickLogin),
-            ),
-          ],
+                      Container(
+                        decoration: BoxDecoration(boxShadow: [
+                          BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, .2),
+                              blurRadius: 20,
+                              offset: Offset(0, 10))
+                        ]),
+                        height: 46,
+                        width: 300,
+                        child: AppButton('Login', onPressed: _onClickLogin),
+                      ),
+                    ],
+                  )),
+              SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: new AssetImage("assets/images/dog1.png"),
+          fit: BoxFit.cover,
         ),
       ),
     );

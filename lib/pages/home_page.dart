@@ -1,10 +1,11 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  AppBar(
+      appBar: AppBar(
         title: Text("Carros"),
         centerTitle: true,
       ),
@@ -16,12 +17,8 @@ class HomePage extends StatelessWidget {
     return Center(
       child: Text(
         'Emerson',
-        style: TextStyle(
-          fontSize: 22
-        ),
+        style: TextStyle(fontSize: 22),
       ),
     );
   }
-
-
 }
