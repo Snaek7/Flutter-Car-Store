@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:first_app/pages/usuario.dart';
+import 'package:first_app/pages/user.dart';
 import 'package:first_app/utils/api_result.dart';
 import 'package:http/http.dart' as http;
 

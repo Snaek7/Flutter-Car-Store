@@ -1,24 +1,42 @@
-import 'package:flare_flutter/flare_actor.dart';
+import 'package:first_app/pages/car/car_api.dart';
+import 'package:first_app/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+import 'car/car_listView.dart';
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Carros"),
-        centerTitle: true,
-      ),
-      body: _body(),
-    );
-  }
-
-  _body() {
-    return Center(
-      child: Text(
-        'Emerson',
-        style: TextStyle(fontSize: 22),
-      ),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text("Carros"),
+            centerTitle: true,
+            bottom: TabBar(tabs: [
+              Tab(
+                text: "Clássicos",
+              ),
+              Tab(
+                text: "Esportivos",
+              ),
+              Tab(
+                text: "Luxo",
+              )
+            ]),
+          ),
+          body: TabBarView(children: [
+            CarListView(CarType.classicos),
+            CarListView(CarType.esportivos),
+            CarListView(CarType.luxo)
+          ]),
+          drawer: DrawerList()),
     );
   }
 }

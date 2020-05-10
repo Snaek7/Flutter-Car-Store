@@ -1,6 +1,6 @@
 import 'package:first_app/pages/home_page.dart';
 import 'package:first_app/pages/login_api.dart';
-import 'package:first_app/pages/usuario.dart';
+import 'package:first_app/pages/user.dart';
 import 'package:first_app/utils/api_result.dart';
 import 'package:first_app/utils/nav.dart';
 import 'package:first_app/widgets/alert.dart';
@@ -23,6 +23,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final _focusPassword = FocusNode();
 
+  bool _showProgress = false;
+
   @override
   void initState() {
     super.initState();
@@ -32,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Carros"),
+        title: Text("Car Store"),
         centerTitle: true,
       ),
       body: _body(),
@@ -44,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Form(
         key: _formKey,
         child: Container(
+          decoration: BoxDecoration(image: _img()),
           padding: EdgeInsets.all(16),
           child: ListView(
             children: <Widget>[
@@ -66,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                                 bottom: BorderSide(color: Colors.grey[200]))),
                         child: AppFormText(
                           'Login',
-                          'Digite o login',
+                          '',
                           controller: _tLogin,
                           validator: _validateLogin,
                           keyboardType: TextInputType.emailAddress,
@@ -77,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                       Container(
                         child: AppFormText(
                           'Senha',
-                          'Digite a senha',
+                          '',
                           isHidden: true,
                           controller: _tPassword,
                           validator: _validatePassword,
@@ -85,35 +88,37 @@ class _LoginPageState extends State<LoginPage> {
                           focusNode: _focusPassword,
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(boxShadow: [
-                          BoxShadow(
-                              color: Color.fromRGBO(0, 0, 0, .2),
-                              blurRadius: 20,
-                              offset: Offset(0, 10))
-                        ]),
-                        height: 46,
-                        width: 300,
-                        child: AppButton('Login', onPressed: _onClickLogin),
-                      ),
+                      SizedBox(height: 2),
+                      _showProgress
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : Container(
+                              decoration: BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                    color: Color.fromRGBO(0, 0, 0, .2),
+                                    blurRadius: 20,
+                                    offset: Offset(0, 10))
+                              ]),
+                              height: 40,
+                              width: 300,
+                              child:
+                                  AppButton('Login', onPressed: _onClickLogin),
+                            ),
                     ],
                   )),
-              SizedBox(height: 20),
             ],
           ),
-        ),
-      ),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: new AssetImage("assets/images/dog1.png"),
-          fit: BoxFit.cover,
         ),
       ),
     );
   }
 
   _img() {
-    return Image.asset("assets/images/dog1.png");
+    return DecorationImage(
+      image: new AssetImage("assets/images/car.jpg"),
+      fit: BoxFit.cover,
+    );
   }
 
   Future<void> _onClickLogin() async {
@@ -125,14 +130,22 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
+    setState(() {
+      _showProgress = true;
+    });
+
     ApiResponse response = await LoginApi.login(login, password);
     if (response.ok) {
       Usuario user = response.result;
       print("user >> $user");
-      push(context, HomePage());
+      push(context, HomePage(), replacement: true);
     } else {
       alert(context, response.msg);
     }
+
+    setState(() {
+      _showProgress = false;
+    });
   }
 
   String _validateLogin(String value) {
