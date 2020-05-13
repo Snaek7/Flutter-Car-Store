@@ -20,6 +20,7 @@ class _CarListViewState extends State<CarListView>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return _body();
   }
 
@@ -56,38 +57,80 @@ class _CarListViewState extends State<CarListView>
 
             return Hero(
               tag: car.id,
-              child: Card(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Image.network(
-                    car.urlFoto ??
-                        "https://us.123rf.com/450wm/pavelstasevich/pavelstasevich1811/pavelstasevich181101028/112815904-no-image-available-icon-flat-vector-illustration.jpg?ver=6",
-                    width: 250,
-                  ),
-                  Text(
-                    car.nome ?? 'Sem Nome',
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(fontSize: 25),
-                  ),
-                  Text(
-                    'Descrição...',
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  ButtonBar(
+              child: Container(
+                height: 170,
+                child: Card(
+                    child: Container(
+                  // decoration: BoxDecoration(
+                  //   image: DecorationImage(
+                  //     image: AssetImage("assets/images/car-bg.png"),
+                  //     fit: BoxFit.fill,
+                  //   ),
+                  // ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      FlatButton(
-                          onPressed: () =>
-                              push(context, CarDetails(car.id, car.urlFoto)),
-                          child: const Text('Detalhes')),
-                      FlatButton(onPressed: () {}, child: const Text('Share')),
+                      Container(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Container(
+                              width: 150,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Text(
+                                  car.nome ?? 'Sem Nome',
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 120,
+                              child: Text(
+                                'Descrição...',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                            child: Image.network(
+                              car.urlFoto ??
+                                  "https://us.123rf.com/450wm/pavelstasevich/pavelstasevich1811/pavelstasevich181101028/112815904-no-image-available-icon-flat-vector-illustration.jpg?ver=6",
+                              width: 150,
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(left: 60, top: 12),
+                            child: ButtonBar(
+                              children: <Widget>[
+                                FlatButton(
+                                    onPressed: () => push(
+                                        context,
+                                        CarDetails(car.id, car.urlFoto,
+                                            car.nome ?? 'Sem Nome')),
+                                    child: const Text('Detalhes')),
+                                FlatButton(
+                                    onPressed: () {},
+                                    child: const Text('Share')),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              )),
+                )),
+              ),
             );
           }),
     );
