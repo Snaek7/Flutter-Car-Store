@@ -1,4 +1,4 @@
-# first_app
+# Flutter Car Store
 
 A new Flutter project.
 
