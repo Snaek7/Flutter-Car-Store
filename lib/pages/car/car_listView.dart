@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:first_app/pages/car/car_bloc.dart';
 import 'package:first_app/utils/nav.dart';
 import 'package:flutter/material.dart';
 
@@ -8,25 +11,33 @@ import 'car_details.dart';
 class CarListView extends StatefulWidget {
   String type;
   CarListView(this.type);
-
   @override
   _CarListViewState createState() => _CarListViewState();
 }
 
 class _CarListViewState extends State<CarListView>
     with AutomaticKeepAliveClientMixin<CarListView> {
+  List<Car> cars;
+
+  final _bloc = CarBloc();
+
+  String get type => widget.type;
+
   @override
   bool get wantKeepAlive => true;
 
   @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return _body();
+  void initState() {
+    super.initState();
+    _bloc.loadData(type);
   }
 
-  _body() {
-    return FutureBuilder(
-        future: CarApi.getCars(widget.type),
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    return StreamBuilder(
+        stream: _bloc.stream,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             print(snapshot.error);
@@ -101,12 +112,14 @@ class _CarListViewState extends State<CarListView>
                       ),
                       Column(
                         children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(top: 20),
-                            child: Image.network(
-                              car.urlFoto ??
-                                  "https://us.123rf.com/450wm/pavelstasevich/pavelstasevich1811/pavelstasevich181101028/112815904-no-image-available-icon-flat-vector-illustration.jpg?ver=6",
-                              width: 150,
+                          Flexible(
+                            child: Container(
+                              margin: EdgeInsets.only(top: 20),
+                              child: Image.network(
+                                car.urlFoto ??
+                                    "https://us.123rf.com/450wm/pavelstasevich/pavelstasevich1811/pavelstasevich181101028/112815904-no-image-available-icon-flat-vector-illustration.jpg?ver=6",
+                                width: 150,
+                              ),
                             ),
                           ),
                           Container(
@@ -134,5 +147,11 @@ class _CarListViewState extends State<CarListView>
             );
           }),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bloc.dispose();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:first_app/pages/car/car_api.dart';
+import 'package:first_app/utils/prefs.dart';
 import 'package:first_app/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -16,12 +17,16 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
+    _initTabs();
+  }
 
+  _initTabs() async {
     _tabController = TabController(length: 3, vsync: this);
 
-    _tabController.index = 1;
+    _tabController.index = await Prefs.getInt('tabIdx');
 
     _tabController.addListener(() {
+      Prefs.setInt('tabIdx', _tabController.index);
       print("Tab ${_tabController.index}");
     });
   }
@@ -44,11 +49,15 @@ class _HomePageState extends State<HomePage>
             )
           ]),
         ),
-        body: TabBarView(controller: _tabController, children: [
-          CarListView(CarType.classicos),
-          CarListView(CarType.esportivos),
-          CarListView(CarType.luxo)
-        ]),
+        body: _tabController == null
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : TabBarView(controller: _tabController, children: [
+                CarListView(CarType.classicos),
+                CarListView(CarType.esportivos),
+                CarListView(CarType.luxo)
+              ]),
         drawer: DrawerList());
   }
 }

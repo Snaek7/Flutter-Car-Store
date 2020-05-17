@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:first_app/pages/home_page.dart';
-import 'package:first_app/pages/login_api.dart';
-import 'package:first_app/pages/user.dart';
+import 'package:first_app/pages/login/login_bloc.dart';
+import 'package:first_app/pages/login/user.dart';
 import 'package:first_app/utils/api_result.dart';
 import 'package:first_app/utils/nav.dart';
 import 'package:first_app/widgets/alert.dart';
@@ -8,6 +10,8 @@ import 'package:first_app/widgets/app_button.dart';
 import 'package:first_app/widgets/app_formText.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+
+import 'login_api.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -23,11 +27,18 @@ class _LoginPageState extends State<LoginPage> {
 
   final _focusPassword = FocusNode();
 
-  bool _showProgress = false;
+  final _bloc = LoginBloc();
 
   @override
   void initState() {
     super.initState();
+    Future<User> future = User.getUser();
+    future.then((User user) {
+      if (user != null) {
+        push(context, HomePage(), replacement: true);
+        // this._tLogin.text = user.login;
+      }
+    });
   }
 
   @override
@@ -89,11 +100,16 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(height: 2),
-                      _showProgress
-                          ? Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : Container(
+                      StreamBuilder<bool>(
+                          initialData: false,
+                          stream: _bloc.stream,
+                          builder: (context, snapshot) {
+                            if (snapshot.data) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            return Container(
                               decoration: BoxDecoration(boxShadow: [
                                 BoxShadow(
                                     color: Color.fromRGBO(0, 0, 0, .2),
@@ -104,7 +120,8 @@ class _LoginPageState extends State<LoginPage> {
                               width: 300,
                               child:
                                   AppButton('Login', onPressed: _onClickLogin),
-                            ),
+                            );
+                          }),
                     ],
                   )),
             ],
@@ -130,22 +147,14 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    setState(() {
-      _showProgress = true;
-    });
-
-    ApiResponse response = await LoginApi.login(login, password);
+    ApiResponse response = await _bloc.login(login, password);
     if (response.ok) {
-      Usuario user = response.result;
+      User user = response.result;
       print("user >> $user");
       push(context, HomePage(), replacement: true);
     } else {
       alert(context, response.msg);
     }
-
-    setState(() {
-      _showProgress = false;
-    });
   }
 
   String _validateLogin(String value) {
@@ -160,5 +169,11 @@ class _LoginPageState extends State<LoginPage> {
       return "Digite a Senha";
     }
     return null;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bloc.dispose();
   }
 }
