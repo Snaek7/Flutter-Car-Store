@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:first_app/pages/car/car_bloc.dart';
 import 'package:first_app/utils/nav.dart';
+import 'package:first_app/utils/text_error.dart';
 import 'package:flutter/material.dart';
 
 import 'car.dart';
@@ -41,12 +42,7 @@ class _CarListViewState extends State<CarListView>
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             print(snapshot.error);
-            return Center(
-              child: Text(
-                'Não possível carregar os dados',
-                style: TextStyle(color: Colors.red, fontSize: 22),
-              ),
-            );
+            return TextError('Não possível carregar os dados');
           }
 
           if (!snapshot.hasData) {
