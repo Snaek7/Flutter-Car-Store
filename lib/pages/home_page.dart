@@ -1,9 +1,8 @@
 import 'package:first_app/pages/car/car_api.dart';
+import 'package:first_app/pages/car/car_page.dart';
 import 'package:first_app/utils/prefs.dart';
 import 'package:first_app/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
-
-import 'car/car_listView.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -54,9 +53,9 @@ class _HomePageState extends State<HomePage>
                 child: CircularProgressIndicator(),
               )
             : TabBarView(controller: _tabController, children: [
-                CarListView(CarType.classicos),
-                CarListView(CarType.esportivos),
-                CarListView(CarType.luxo)
+                CarPage(CarType.classicos),
+                CarPage(CarType.esportivos),
+                CarPage(CarType.luxo)
               ]),
         drawer: DrawerList());
   }
