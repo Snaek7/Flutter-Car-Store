@@ -1,12 +1,11 @@
-import 'dart:async';
-
 import 'package:first_app/pages/car/car_bloc.dart';
+import 'package:first_app/pages/car/car_model.dart';
 import 'package:first_app/utils/nav.dart';
 import 'package:first_app/utils/text_error.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'car.dart';
-import 'car_api.dart';
 import 'car_details.dart';
 
 class CarListView extends StatefulWidget {
@@ -20,7 +19,9 @@ class _CarListViewState extends State<CarListView>
     with AutomaticKeepAliveClientMixin<CarListView> {
   List<Car> cars;
 
-  final _bloc = CarBloc();
+  // final _bloc = CarBloc();
+
+  final _model = CarModel();
 
   String get type => widget.type;
 
@@ -30,28 +31,44 @@ class _CarListViewState extends State<CarListView>
   @override
   void initState() {
     super.initState();
-    _bloc.loadData(type);
+    _model.fetch(type);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
-    return StreamBuilder(
-        stream: _bloc.stream,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            print(snapshot.error);
-            return TextError('Não possível carregar os dados');
-          }
+    // Stram builder for study purpose
 
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
-          }
+    // return StreamBuilder(
+    //     stream: _bloc.stream,
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasError) {
+    //         print(snapshot.error);
+    //         return TextError('Não possível carregar os dados');
+    //       }
 
-          List<Car> cars = snapshot.data;
-          return _listView(cars);
-        });
+    //       if (!snapshot.hasData) {
+    //         return Center(child: CircularProgressIndicator());
+    //       }
+
+    //       List<Car> cars = snapshot.data;
+    //       return _listView(cars);
+    //     });
+
+    return Observer(builder: (context) {
+      List<Car> cars = _model.cars;
+      if (_model.error != null) {
+        print(_model.error);
+        return TextError('Não possível carregar os dados');
+      }
+
+      if (_model.cars == null) {
+        return Center(child: CircularProgressIndicator());
+      }
+
+      return _listView(cars);
+    });
   }
 
   Container _listView(List<Car> cars) {
@@ -123,10 +140,8 @@ class _CarListViewState extends State<CarListView>
                             child: ButtonBar(
                               children: <Widget>[
                                 FlatButton(
-                                    onPressed: () => push(
-                                        context,
-                                        CarDetails(car.id, car.urlFoto,
-                                            car.nome ?? 'Sem Nome')),
+                                    onPressed: () =>
+                                        push(context, CarDetails(car)),
                                     child: const Text('Detalhes')),
                                 FlatButton(
                                     onPressed: () {},
@@ -145,9 +160,10 @@ class _CarListViewState extends State<CarListView>
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _bloc.dispose();
-  }
+// stream for study purpose
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _bloc.dispose();
+  // }
 }
